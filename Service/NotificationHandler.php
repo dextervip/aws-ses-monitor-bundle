@@ -66,7 +66,7 @@ class NotificationHandler extends HandlerAbstract
         $message = json_decode($data['Message'], true);
 
         // Create and Persist the MailMessage object
-        $mailMessage = $this->handleMailMessage($message['mail']);
+        $mailMessage = $this->handleMailMessage(mb_strtolower($message['mail']));
 
         if (false === isset($message['notificationType'])) {
             return ['code' => 403, 'content' => 'Missed NotificationType.'];
@@ -249,7 +249,7 @@ class NotificationHandler extends HandlerAbstract
      */
     private function getEmailStatus($email)
     {
-        $status = $this->entityManager->getRepository('AwsSesMonitorBundle:EmailStatus')->findOneByEmailAddress($email);
+        $status = $this->entityManager->getRepository('AwsSesMonitorBundle:EmailStatus')->findOneByEmailAddress(mb_strtolower($email));
 
         if (null === $status) {
             $status = new EmailStatus($email);
